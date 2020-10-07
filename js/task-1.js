@@ -58,5 +58,5 @@ smartGallery.galleryRef.addEventListener("click", (event) => {
     setTimeout(() => smartGallery.modalImageRef.src = "",500);
 
     document.body.style.overflow = "auto";
-  });
+  }, {once: true});
 });
