@@ -55,6 +55,8 @@ smartGallery.galleryRef.addEventListener("click", (event) => {
   smartGallery.modalImageRef.alt = event.target.alt;
   smartGallery.closeButtonRef.addEventListener("click", () => {
     smartGallery.modalRef.classList.remove("is-open");
-    smartGallery.modalImageRef.src = "";
+    setTimeout(() => smartGallery.modalImageRef.src = "",500);
+
+    document.body.style.overflow = "auto";
   });
 });
