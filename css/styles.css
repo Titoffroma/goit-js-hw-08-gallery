@@ -143,7 +143,18 @@ body {
   position: absolute;
   top: 10px;
   left: 40px;
-  z-index: 10;
+  border-radius: 50px;
+  width: 120px;
+  outline: none;
+  background: #c5c5c5;
+}
+.open-btn:hover,
+.open-btn:focus {
+  box-shadow: 0px 2px 4px #757575;
+}
+.open-btn:active {
+  transform: translateY(1px) scale(0.95);
+  background: #aaaaaa;
 }
 .is-hidden {
   display: none;

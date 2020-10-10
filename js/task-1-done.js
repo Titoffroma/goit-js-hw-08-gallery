@@ -46,12 +46,6 @@ const smartGallery = {
       smartGallery.openLightbox.bind(this)
     );
   },
-  addDocListener() {
-    document.addEventListener("keydown", this.operateLightbox.bind(this));
-  },
-  removeDocListener() {
-    document.removeEventListener("keydown", this.operateLightbox.bind(this));
-  },
   openLightbox(event) {
     event.preventDefault();
     if (event.target.tagName !== "IMG") return;
@@ -67,22 +61,7 @@ const smartGallery = {
       this.closeLightbox.bind(this),
       { once: true }
     );
-    this.addDocListener();
-  },
-  operateLightbox(event) {
-    console.log(event.code);
-    if (event.code === "Escape") {
-      this.removeDocListener();
-      this.modalRef.classList.remove("is-open");
-      setTimeout(() => (this.modalImageRef.src = ""), 500);
-      document.body.style.overflow = "auto";
-    }
-    if (event.code === "ArrowRight") {
-      this.moveRightLightbox();
-    }
-    if (event.code === "ArrowLeft") {
-      this.moveLeftLightbox();
-    }
+    addDocListener();
   },
   moveRightLightbox() {
     if (this.currentIndex === this.imagesArray.length - 1) {
@@ -95,11 +74,9 @@ const smartGallery = {
     this.currentIndex += 1;
   },
   moveLeftLightbox() {
-    console.log(this.currentIndex);
     if (this.currentIndex === 0) {
       this.currentIndex = this.imagesArray.length;
     }
-    console.log(this.currentIndex);
     this.modalImageRef.src = this.imagesArray[this.currentIndex - 1].original;
     this.modalImageRef.alt = this.imagesArray[
       this.currentIndex - 1
@@ -107,7 +84,7 @@ const smartGallery = {
     this.currentIndex -= 1;
   },
   closeLightbox() {
-    this.removeDocListener();
+    removeDocListener();
     this.modalRef.classList.remove("is-open");
     setTimeout(() => (this.modalImageRef.src = ""), 500);
     document.body.style.overflow = "auto";
@@ -117,3 +94,24 @@ smartGallery.buttonRef.addEventListener(
   "click",
   smartGallery.openGallery.bind(smartGallery)
 );
+
+function addDocListener() {
+  document.addEventListener("keydown", operateLightbox);
+}
+function removeDocListener() {
+  document.removeEventListener("keydown", operateLightbox);
+}
+function operateLightbox(event) {
+  if (event.code === "Escape") {
+    removeDocListener();
+    smartGallery.modalRef.classList.remove("is-open");
+    setTimeout(() => (smartGallery.modalImageRef.src = ""), 500);
+    document.body.style.overflow = "auto";
+  }
+  if (event.code === "ArrowRight") {
+    smartGallery.moveRightLightbox();
+  }
+  if (event.code === "ArrowLeft") {
+    smartGallery.moveLeftLightbox();
+  }
+}
