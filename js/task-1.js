@@ -6,6 +6,7 @@ const smartGallery = {
   modalRef: document.querySelector(".lightbox"),
   modalImageRef: document.querySelector(".lightbox__image"),
   closeButtonRef: document.querySelector(".lightbox__button"),
+  currentIdex: 0,
   addImages: function () {
     const imagesString = this.imagesArray.reduce(
       (acc, { preview, original, description }) => {
@@ -41,22 +42,32 @@ const smartGallery = {
       }
     }
   },
-  openModal: () => {},
+  openLightbox: function (event) {
+    event.preventDefault();
+    if (event.target.tagName !== "IMG") return;
+    this.modalRef.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    this.modalImageRef.src = event.target.dataset.source;
+    this.modalImageRef.alt = event.target.alt;
+    this.currentImage = event.target;
+    this.initialImage = this.galleryRef.querySelector("img");
+    this.closeButtonRef.addEventListener("click", this.closeLightbox.bind(this),{once: true});
+    this.modalImageRef.addEventListener("click", this.clickLightbox.bind(this));
+  },
+  closeLightbox: function () {
+    this.modalRef.classList.remove("is-open");
+    setTimeout(() => this.modalImageRef.src = "", 500);
+    document.body.style.overflow = "auto";
+    this.modalImageRef.removeEventListener("click", this.clickLightbox.bind(this));
+  },
+  clickLightbox: function () {
+    this.nextImage = !!this.currentImage.parentElement.parentElement.nextElementSibling ? this.currentImage.parentElement.parentElement.nextElementSibling.querySelector("img") : this.initialImage;
+    this.modalImageRef.src = this.nextImage.dataset.source;
+    this.currentImage = this.nextImage;
+  },
 };
 smartGallery.buttonRef.addEventListener(
   "click",
   smartGallery.openGallery.bind(smartGallery)
 );
-smartGallery.galleryRef.addEventListener("click", (event) => {
-  event.preventDefault();
-  smartGallery.modalRef.classList.add("is-open");
-  document.body.style.overflow = "hidden";
-  smartGallery.modalImageRef.src = event.target.dataset.source;
-  smartGallery.modalImageRef.alt = event.target.alt;
-  smartGallery.closeButtonRef.addEventListener("click", () => {
-    smartGallery.modalRef.classList.remove("is-open");
-    setTimeout(() => smartGallery.modalImageRef.src = "",500);
-
-    document.body.style.overflow = "auto";
-  }, {once: true});
-});
+smartGallery.galleryRef.addEventListener("click", smartGallery.openLightbox.bind(smartGallery));
