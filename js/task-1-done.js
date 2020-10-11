@@ -67,21 +67,17 @@ class smartGallery {
     if (this.currentIndex === this.imagesArray.length - 1) {
       this.currentIndex = -1;
     }
-    this.modalImageRef.src = this.imagesArray[this.currentIndex + 1].original;
-    this.modalImageRef.alt = this.imagesArray[
-      this.currentIndex + 1
-    ].description;
     this.currentIndex += 1;
+    this.modalImageRef.src = this.imagesArray[this.currentIndex].original;
+    this.modalImageRef.alt = this.imagesArray[this.currentIndex].description;
   }
   moveLeftLightbox() {
     if (this.currentIndex === 0) {
       this.currentIndex = this.imagesArray.length;
     }
-    this.modalImageRef.src = this.imagesArray[this.currentIndex - 1].original;
-    this.modalImageRef.alt = this.imagesArray[
-      this.currentIndex - 1
-    ].description;
     this.currentIndex -= 1;
+    this.modalImageRef.src = this.imagesArray[this.currentIndex].original;
+    this.modalImageRef.alt = this.imagesArray[this.currentIndex].description;
   }
   closeLightbox() {
     this.removeDocListener();
