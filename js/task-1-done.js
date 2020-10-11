@@ -1,12 +1,14 @@
 import imagesArr from "./gallery-items.js";
-const smartGallery = {
-  imagesArray: imagesArr,
-  galleryRef: document.querySelector(".gallery"),
-  buttonRef: document.querySelector(".open-btn"),
-  modalRef: document.querySelector(".lightbox"),
-  modalImageRef: document.querySelector(".lightbox__image"),
-  closeButtonRef: document.querySelector(".lightbox__button"),
-  currentIndex: 0,
+class smartGallery {
+  constructor(params, imagesArray = imagesArr, currentIndex = 0) {
+    this.galleryRef = params.galleryRef;
+    this.buttonRef = params.buttonRef;
+    this.modalRef = params.modalRef;
+    this.modalImageRef = params.modalImageRef;
+    this.closeButtonRef = params.closeButtonRef;
+    this.imagesArray = imagesArray;
+    this.currentIndex = currentIndex;
+  }
   addImages() {
     const imagesString = this.imagesArray.reduce(
       (acc, { preview, original, description }) => {
@@ -28,7 +30,7 @@ const smartGallery = {
       ""
     );
     this.galleryRef.insertAdjacentHTML("beforeend", imagesString);
-  },
+  }
   openGallery(event) {
     if (this.galleryRef.children.length === 0) {
       this.addImages();
@@ -41,11 +43,8 @@ const smartGallery = {
         event.target.textContent = "Close Gallery";
       }
     }
-    this.galleryRef.addEventListener(
-      "click",
-      smartGallery.openLightbox.bind(this)
-    );
-  },
+    this.galleryRef.addEventListener("click", this.openLightbox.bind(this));
+  }
   openLightbox(event) {
     event.preventDefault();
     if (event.target.tagName !== "IMG") return;
@@ -56,13 +55,14 @@ const smartGallery = {
     this.currentIndex = Array.from(
       document.querySelectorAll(".gallery__image")
     ).indexOf(event.target);
+    console.log(this.currentIndex);
     this.closeButtonRef.addEventListener(
       "click",
       this.closeLightbox.bind(this),
       { once: true }
     );
-    addDocListener();
-  },
+    this.addDocListener();
+  }
   moveRightLightbox() {
     if (this.currentIndex === this.imagesArray.length - 1) {
       this.currentIndex = -1;
@@ -72,7 +72,7 @@ const smartGallery = {
       this.currentIndex + 1
     ].description;
     this.currentIndex += 1;
-  },
+  }
   moveLeftLightbox() {
     if (this.currentIndex === 0) {
       this.currentIndex = this.imagesArray.length;
@@ -82,36 +82,46 @@ const smartGallery = {
       this.currentIndex - 1
     ].description;
     this.currentIndex -= 1;
-  },
+  }
   closeLightbox() {
-    removeDocListener();
+    this.removeDocListener();
     this.modalRef.classList.remove("is-open");
     setTimeout(() => (this.modalImageRef.src = ""), 500);
     document.body.style.overflow = "auto";
-  },
-};
-smartGallery.buttonRef.addEventListener(
-  "click",
-  smartGallery.openGallery.bind(smartGallery)
-);
+  }
+  addDocListener() {
+    this.galleryRef.addEventListener("keydown", operateLightbox);
+  }
+  removeDocListener() {
+    this.galleryRef.removeEventListener("keydown", operateLightbox);
+  }
+}
 
-function addDocListener() {
-  smartGallery.galleryRef.addEventListener("keydown", operateLightbox);
-}
-function removeDocListener() {
-  smartGallery.galleryRef.removeEventListener("keydown", operateLightbox);
-}
+const initialParams = {
+  galleryRef: document.querySelector(".gallery"),
+  buttonRef: document.querySelector(".open-btn"),
+  modalRef: document.querySelector(".lightbox"),
+  modalImageRef: document.querySelector(".lightbox__image"),
+  closeButtonRef: document.querySelector(".lightbox__button"),
+};
+
+const myGallery = new smartGallery(initialParams);
+
 function operateLightbox(event) {
+  console.log(event.code);
   if (event.code === "Escape") {
-    removeDocListener();
-    smartGallery.modalRef.classList.remove("is-open");
-    setTimeout(() => (smartGallery.modalImageRef.src = ""), 500);
-    document.body.style.overflow = "auto";
+    myGallery.removeDocListener();
+    myGallery.closeLightbox();
   }
   if (event.code === "ArrowRight") {
-    smartGallery.moveRightLightbox();
+    myGallery.moveRightLightbox();
   }
   if (event.code === "ArrowLeft") {
-    smartGallery.moveLeftLightbox();
+    myGallery.moveLeftLightbox();
   }
 }
+
+myGallery.buttonRef.addEventListener(
+  "click",
+  myGallery.openGallery.bind(myGallery)
+);
