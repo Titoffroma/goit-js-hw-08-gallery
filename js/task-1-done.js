@@ -55,7 +55,6 @@ class smartGallery {
     this.currentIndex = Array.from(
       document.querySelectorAll(".gallery__image")
     ).indexOf(event.target);
-    console.log(this.currentIndex);
     this.closeButtonRef.addEventListener(
       "click",
       this.closeLightbox.bind(this),
@@ -63,21 +62,23 @@ class smartGallery {
     );
     this.addDocListener();
   }
+  moveImages() {
+    this.modalImageRef.src = this.imagesArray[this.currentIndex].original;
+    this.modalImageRef.alt = this.imagesArray[this.currentIndex].description;
+  }
   moveRightLightbox() {
     if (this.currentIndex === this.imagesArray.length - 1) {
       this.currentIndex = -1;
     }
     this.currentIndex += 1;
-    this.modalImageRef.src = this.imagesArray[this.currentIndex].original;
-    this.modalImageRef.alt = this.imagesArray[this.currentIndex].description;
+    this.moveImages();
   }
   moveLeftLightbox() {
     if (this.currentIndex === 0) {
       this.currentIndex = this.imagesArray.length;
     }
     this.currentIndex -= 1;
-    this.modalImageRef.src = this.imagesArray[this.currentIndex].original;
-    this.modalImageRef.alt = this.imagesArray[this.currentIndex].description;
+    this.moveImages();
   }
   closeLightbox() {
     this.removeDocListener();
