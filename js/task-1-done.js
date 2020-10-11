@@ -96,10 +96,10 @@ smartGallery.buttonRef.addEventListener(
 );
 
 function addDocListener() {
-  document.addEventListener("keydown", operateLightbox);
+  smartGallery.galleryRef.addEventListener("keydown", operateLightbox);
 }
 function removeDocListener() {
-  document.removeEventListener("keydown", operateLightbox);
+  smartGallery.galleryRef.removeEventListener("keydown", operateLightbox);
 }
 function operateLightbox(event) {
   if (event.code === "Escape") {
