@@ -67,7 +67,6 @@ class smartGallery {
     this.currentIndex = Array.from(
       document.querySelectorAll(".gallery__image")
     ).indexOf(event.target);
-    console.log(this.currentIndex);
     this.closeButtonRef.addEventListener(
       "click",
       this.closeLightbox.bind(this),
