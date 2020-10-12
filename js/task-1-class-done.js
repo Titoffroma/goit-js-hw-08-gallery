@@ -1,13 +1,25 @@
 import imagesArr from "./gallery-items.js";
 class smartGallery {
-  constructor(params, imagesArray = imagesArr, currentIndex = 0) {
+  constructor(params, imagesArray = imagesArr) {
     this.galleryRef = params.galleryRef;
     this.buttonRef = params.buttonRef;
     this.modalRef = params.modalRef;
     this.modalImageRef = params.modalImageRef;
     this.closeButtonRef = params.closeButtonRef;
     this.imagesArray = imagesArray;
-    this.currentIndex = currentIndex;
+    smartGallery.prototype.operateLightbox = function (event) {
+      console.log(event.code);
+      if (event.code === "Escape") {
+        this.removeDocListener();
+        this.closeLightbox();
+      }
+      if (event.code === "ArrowRight") {
+        this.moveRightLightbox();
+      }
+      if (event.code === "ArrowLeft") {
+        this.moveLeftLightbox();
+      }
+    }.bind(this);
   }
   addImages() {
     const imagesString = this.imagesArray.reduce(
@@ -35,6 +47,7 @@ class smartGallery {
     if (this.galleryRef.children.length === 0) {
       this.addImages();
       event.target.textContent = "Close Gallery";
+      this.galleryRef.addEventListener("click", this.openLightbox.bind(this));
     } else {
       this.galleryRef.classList.toggle("is-hidden");
       if (event.target.textContent === "Close Gallery") {
@@ -43,11 +56,17 @@ class smartGallery {
         event.target.textContent = "Close Gallery";
       }
     }
-    this.galleryRef.addEventListener("click", this.openLightbox.bind(this));
+  }
+  addDocListener() {
+    this.galleryRef.addEventListener("keydown", this.operateLightbox);
+  }
+  removeDocListener() {
+    this.galleryRef.removeEventListener("keydown", this.operateLightbox);
   }
   openLightbox(event) {
     event.preventDefault();
     if (event.target.tagName !== "IMG") return;
+    this.addDocListener();
     this.modalRef.classList.add("is-open");
     document.body.style.overflow = "hidden";
     this.modalImageRef.src = event.target.dataset.source;
@@ -60,7 +79,6 @@ class smartGallery {
       this.closeLightbox.bind(this),
       { once: true }
     );
-    this.addDocListener();
   }
   moveImages() {
     this.modalImageRef.src = this.imagesArray[this.currentIndex].original;
@@ -81,16 +99,10 @@ class smartGallery {
     this.moveImages();
   }
   closeLightbox() {
-    this.removeDocListener();
     this.modalRef.classList.remove("is-open");
     setTimeout(() => (this.modalImageRef.src = ""), 500);
     document.body.style.overflow = "auto";
-  }
-  addDocListener() {
-    this.galleryRef.addEventListener("keydown", operateLightbox);
-  }
-  removeDocListener() {
-    this.galleryRef.removeEventListener("keydown", operateLightbox);
+    this.removeDocListener();
   }
 }
 
@@ -101,22 +113,7 @@ const initialParams = {
   modalImageRef: document.querySelector(".lightbox__image"),
   closeButtonRef: document.querySelector(".lightbox__button"),
 };
-
 const myGallery = new smartGallery(initialParams);
-
-function operateLightbox(event) {
-  console.log(event.code);
-  if (event.code === "Escape") {
-    myGallery.removeDocListener();
-    myGallery.closeLightbox();
-  }
-  if (event.code === "ArrowRight") {
-    myGallery.moveRightLightbox();
-  }
-  if (event.code === "ArrowLeft") {
-    myGallery.moveLeftLightbox();
-  }
-}
 
 myGallery.buttonRef.addEventListener(
   "click",
