@@ -73,16 +73,14 @@ class smartGallery {
     console.log(event.code);
     if (event.code === "Escape") {
       this.closeLightbox();
-      this.addDocListener();
     }
     if (event.code === "ArrowRight") {
       this.moveRightLightbox();
-      this.addDocListener();
     }
     if (event.code === "ArrowLeft") {
       this.moveLeftLightbox();
-      this.addDocListener();
     }
+    this.addDocListener();
   }
   moveImages() {
     this.modalImageRef.src = this.imagesArray[this.currentIndex].original;
