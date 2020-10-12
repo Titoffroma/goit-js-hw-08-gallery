@@ -10,7 +10,6 @@ class smartGallery {
     smartGallery.prototype.operateLightbox = function (event) {
       console.log(event.code);
       if (event.code === "Escape") {
-        this.removeDocListener();
         this.closeLightbox();
       }
       if (event.code === "ArrowRight") {
@@ -81,8 +80,10 @@ class smartGallery {
     );
   }
   moveImages() {
+    this.modalImageRef.classList.add("scale");
     this.modalImageRef.src = this.imagesArray[this.currentIndex].original;
     this.modalImageRef.alt = this.imagesArray[this.currentIndex].description;
+    setTimeout(() => this.modalImageRef.classList.remove("scale"), 200);
   }
   moveRightLightbox() {
     if (this.currentIndex === this.imagesArray.length - 1) {
@@ -100,7 +101,7 @@ class smartGallery {
   }
   closeLightbox() {
     this.modalRef.classList.remove("is-open");
-    setTimeout(() => (this.modalImageRef.src = ""), 500);
+    setTimeout(() => (this.modalImageRef.src = ""), 200);
     document.body.style.overflow = "auto";
     this.removeDocListener();
   }

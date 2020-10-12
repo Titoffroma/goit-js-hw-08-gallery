@@ -102,7 +102,7 @@ class smartGallery {
   }
   closeLightbox() {
     this.modalRef.classList.remove("is-open");
-    setTimeout(() => (this.modalImageRef.src = ""), 500);
+    setTimeout(() => (this.modalImageRef.src = ""), 200);
     document.body.style.overflow = "auto";
     this.currentIndex = 1;
   }
