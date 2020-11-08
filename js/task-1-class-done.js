@@ -7,18 +7,7 @@ class smartGallery {
     this.modalImageRef = params.modalImageRef;
     this.closeButtonRef = params.closeButtonRef;
     this.imagesArray = imagesArray;
-    smartGallery.prototype.operateLightbox = function (event) {
-      console.log(event.code);
-      if (event.code === "Escape") {
-        this.closeLightbox();
-      }
-      if (event.code === "ArrowRight") {
-        this.moveRightLightbox();
-      }
-      if (event.code === "ArrowLeft") {
-        this.moveLeftLightbox();
-      }
-    }.bind(this);
+    this.operateLightbox = this.operateLightbox.bind(this);
   }
   addImages() {
     const imagesString = this.imagesArray.reduce(
@@ -78,6 +67,18 @@ class smartGallery {
       this.closeLightbox.bind(this),
       { once: true }
     );
+  }
+  operateLightbox(event) {
+    console.log(event.code);
+    if (event.code === "Escape") {
+      this.closeLightbox();
+    }
+    if (event.code === "ArrowRight") {
+      this.moveRightLightbox();
+    }
+    if (event.code === "ArrowLeft") {
+      this.moveLeftLightbox();
+    }
   }
   moveImages() {
     this.modalImageRef.classList.add("scale");
